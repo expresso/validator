@@ -1,2 +1,3 @@
-# validator
-JSON Schema validation middleware for Expresso
+# Expresso Validator
+
+> JSON Schema validation middleware for Expresso
