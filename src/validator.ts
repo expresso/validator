@@ -1,0 +1,65 @@
+import { badData } from 'boom'
+import { IJSONSchema } from './interfaces/IJsonSchema'
+import { RequestHandler, Request, Response, NextFunction } from 'express'
+import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
+
+const REASON_REQUIRED = 'required'
+const REASON_REQUIRED_MESSAGE = 'is required'
+
+type ValidateOptions = { coerce: boolean, defaults: boolean, property: string }
+
+type ReadableError = {
+  path: string
+  message: string
+  reason: string
+}
+
+type Nullable<T> = T | null | undefined
+
+type ExtendedRequest = Request & {
+  [k: string]: any
+}
+
+function humanReadableErrors (errors: Nullable<ErrorObject[]>): Nullable<ReadableError[]> {
+  if (!errors) return null
+
+  return errors.map((error) => {
+    const { dataPath, message, keyword: reason } = error
+    const missingProperty = (error.params as DependenciesParams).missingProperty
+
+    const path = ((reason === REASON_REQUIRED) ? `${dataPath}.${missingProperty}` : dataPath).replace(/^\./, '')
+    const text = ((reason === REASON_REQUIRED) ? REASON_REQUIRED_MESSAGE : (message as string).replace('should', 'must').replace(/"/g, '`'))
+
+    return { path, message: `'${path}' ${text}`, reason }
+  })
+}
+
+function factory (schema: IJSONSchema, { coerce = true, defaults = true, property = 'body' }: ValidateOptions): RequestHandler {
+  const ajv = new Ajv({
+    coerceTypes: coerce,
+    useDefaults: defaults,
+    allErrors: true
+  })
+
+  const compile = Promise.resolve(() => ajv.compile(schema))
+
+  return (req: ExtendedRequest, _res: Response, next: NextFunction) => {
+    const validateBody = (validate: ValidateFunction) => {
+      if (validate(req[property] || {})) return next()
+
+      const errors = humanReadableErrors(validate.errors)
+      const message = (errors as ReadableError[]).map(error => error.message).join('.')
+
+      next(badData(message, errors))
+    }
+
+    compile.then(validateFunction => validateFunction())
+      .then(validateBody)
+      .catch(next)
+  }
+}
+
+factory.body = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'body' })
+factory.query = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'query' })
+
+module.exports = { factory }
