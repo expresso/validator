@@ -62,4 +62,4 @@ function factory (schema: IJSONSchema, { coerce = true, defaults = true, propert
 factory.body = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'body' })
 factory.query = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'query' })
 
-module.exports = { factory }
+export { factory as validate }
