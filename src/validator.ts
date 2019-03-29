@@ -1,5 +1,5 @@
 import { badData } from 'boom'
-import { IJSONSchema } from './interfaces/IJsonSchema'
+import { JSONSchema } from './interfaces/IJsonSchema'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
 
@@ -34,7 +34,7 @@ function humanReadableErrors (errors: Nullable<ErrorObject[]>): Nullable<Readabl
   })
 }
 
-function factory (schema: IJSONSchema, { coerce = true, defaults = true, property = 'body' }: ValidateOptions): RequestHandler {
+function factory (schema: JSONSchema, { coerce = true, defaults = true, property = 'body' }: ValidateOptions): RequestHandler {
   const ajv = new Ajv({
     coerceTypes: coerce,
     useDefaults: defaults,
@@ -59,7 +59,7 @@ function factory (schema: IJSONSchema, { coerce = true, defaults = true, propert
   }
 }
 
-factory.body = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'body' })
-factory.query = (schema: IJSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'query' })
+factory.body = (schema: JSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'body' })
+factory.query = (schema: JSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'query' })
 
 module.exports = { factory }
