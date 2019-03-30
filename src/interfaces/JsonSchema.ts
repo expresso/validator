@@ -1,14 +1,23 @@
 import { Without } from '../types/without'
 
-interface GenericType {
+interface GenericType<U> extends CombinationOperators<U> {
   title?: string
   description?: string
   default?: any
   examples?: Array<any>
   const?: any
+  contentEncoding?: string
+  contentMediaType?: string
 }
 
-interface ObjectSchema extends GenericType {
+interface CombinationOperators<T> {
+  oneOf?: Array<Partial<T>>
+  not?: Partial<T>
+  anyOf?: Array<Partial<T>>
+  allOf?: Array<Partial<T>>
+}
+
+interface ObjectSchema extends GenericType<ObjectSchema> {
   type: 'object'
   required?: Array<keyof ObjectPropertyPart>
   additionalProperties?: boolean | JSONSchema
@@ -26,7 +35,7 @@ interface ObjectSchema extends GenericType {
   }
 }
 
-interface BaseNumberSchema<U> extends GenericType {
+interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>> {
   type: U
   multipleOf?: number
   exclusiveMaximum?: number
@@ -35,7 +44,7 @@ interface BaseNumberSchema<U> extends GenericType {
   maximum?: number
 }
 
-interface StringSchema extends GenericType {
+interface StringSchema extends GenericType<StringSchema> {
   type: 'string'
   minLength?: number
   maxLength?: number
@@ -44,7 +53,7 @@ interface StringSchema extends GenericType {
   enum?: string[]
 }
 
-interface ArraySchema extends GenericType {
+interface ArraySchema extends GenericType<ArraySchema> {
   type: 'array'
   items?: JSONSchema | JSONSchema[]
   contains?: JSONSchema
@@ -58,6 +67,10 @@ interface PrimitiveType<U> {
   type: U
 }
 
+interface RootSchema {
+  $schema?: string
+}
+
 interface ObjectPropertyPart {
   [propertyName: string]: JSONSchema
 }
@@ -65,4 +78,4 @@ interface ObjectPropertyPart {
 // type JSONSchemaTypes = 'string' | 'integer' | 'number' | 'boolean' | 'array' | 'null'
 type StringBuiltInFormats = 'date-time' | 'time' | 'date' | 'email' | 'idn-email' | 'hostname' | 'idn-hostname' | 'ipv4' | 'ipv6' | 'uri' | 'uri-reference' | 'iri' | 'iri-reference' | 'uri-template' | 'json-pointer' | 'relative-json-pointer' | 'regex'
 
-export type JSONSchema = ObjectSchema | BaseNumberSchema<'integer'> | BaseNumberSchema<'number'> | StringSchema | PrimitiveType<'boolean'> | ArraySchema | PrimitiveType<'null'>
+export type JSONSchema = (ObjectSchema | BaseNumberSchema<'integer'> | BaseNumberSchema<'number'> | StringSchema | PrimitiveType<'boolean'> | ArraySchema | PrimitiveType<'null'>) & RootSchema

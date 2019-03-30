@@ -1,5 +1,5 @@
 import { badData } from 'boom'
-import { JSONSchema } from './interfaces/IJsonSchema'
+import { JSONSchema } from './interfaces/JsonSchema'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
 
