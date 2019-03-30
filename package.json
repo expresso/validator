@@ -1,6 +1,6 @@
 {
   "name": "@expresso/validator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JSON Schema route validation middleware for Expresso",
   "main": "dist/validator.js",
   "scripts": {
