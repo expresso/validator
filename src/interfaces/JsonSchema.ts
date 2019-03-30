@@ -1,5 +1,27 @@
 import { Without } from '../types/without'
 
+/**
+ * @description All the values a string format can have
+ */
+type StringBuiltInFormats = 'date-time' | 'time' | 'date' | 'email' | 'idn-email' | 'hostname' | 'idn-hostname' | 'ipv4' | 'ipv6' | 'uri' | 'uri-reference' | 'iri' | 'iri-reference' | 'uri-template' | 'json-pointer' | 'relative-json-pointer' | 'regex'
+
+/**
+ * @description Base for all other types
+ */
+interface PrimitiveType<U> {
+  type: U
+}
+
+/**
+ * @description Properties that should be at the root level of the schema
+ */
+interface RootSchema {
+  $schema?: string
+}
+
+/**
+ * @description Properties which are in all types
+ */
 interface GenericType<U> extends CombinationOperators<U> {
   title?: string
   description?: string
@@ -10,6 +32,9 @@ interface GenericType<U> extends CombinationOperators<U> {
   contentMediaType?: string
 }
 
+/**
+ * @description Schema combination operators
+ */
 interface CombinationOperators<T> {
   oneOf?: Array<Partial<T>>
   not?: Partial<T>
@@ -17,9 +42,18 @@ interface CombinationOperators<T> {
   allOf?: Array<Partial<T>>
 }
 
-interface ObjectSchema extends GenericType<ObjectSchema> {
-  type: 'object'
-  required?: Array<keyof ObjectPropertyPart>
+/**
+ * @description Properties for an object type
+ */
+interface ObjectPropertyPart {
+  [propertyName: string]: JSONSchema
+}
+
+/**
+ * @description Object type
+ */
+interface ObjectSchema extends GenericType<ObjectSchema>, PrimitiveType<'object'> {
+  required?: string[]
   additionalProperties?: boolean | JSONSchema
   properties?: ObjectPropertyPart
   propertyNames?: {
@@ -35,8 +69,10 @@ interface ObjectSchema extends GenericType<ObjectSchema> {
   }
 }
 
-interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>> {
-  type: U
+/**
+ * @description Number schemas for integer and number
+ */
+interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>>, PrimitiveType<U> {
   multipleOf?: number
   exclusiveMaximum?: number
   exclusiveMinimum?: number
@@ -44,8 +80,10 @@ interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>> {
   maximum?: number
 }
 
-interface StringSchema extends GenericType<StringSchema> {
-  type: 'string'
+/**
+ * @description String type
+ */
+interface StringSchema extends GenericType<StringSchema>, PrimitiveType<'string'> {
   minLength?: number
   maxLength?: number
   pattern?: string
@@ -53,8 +91,10 @@ interface StringSchema extends GenericType<StringSchema> {
   enum?: string[]
 }
 
-interface ArraySchema extends GenericType<ArraySchema> {
-  type: 'array'
+/**
+ * @description ArraySchema
+ */
+interface ArraySchema extends GenericType<ArraySchema>, PrimitiveType<'array'> {
   items?: JSONSchema | JSONSchema[]
   contains?: JSONSchema
   additionalItems?: boolean | JSONSchema
@@ -62,20 +102,5 @@ interface ArraySchema extends GenericType<ArraySchema> {
   minItems?: number
   uniqueness?: boolean
 }
-
-interface PrimitiveType<U> {
-  type: U
-}
-
-interface RootSchema {
-  $schema?: string
-}
-
-interface ObjectPropertyPart {
-  [propertyName: string]: JSONSchema
-}
-
-// type JSONSchemaTypes = 'string' | 'integer' | 'number' | 'boolean' | 'array' | 'null'
-type StringBuiltInFormats = 'date-time' | 'time' | 'date' | 'email' | 'idn-email' | 'hostname' | 'idn-hostname' | 'ipv4' | 'ipv6' | 'uri' | 'uri-reference' | 'iri' | 'iri-reference' | 'uri-template' | 'json-pointer' | 'relative-json-pointer' | 'regex'
 
 export type JSONSchema = (ObjectSchema | BaseNumberSchema<'integer'> | BaseNumberSchema<'number'> | StringSchema | PrimitiveType<'boolean'> | ArraySchema | PrimitiveType<'null'>) & RootSchema
