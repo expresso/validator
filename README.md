@@ -49,7 +49,7 @@ app.post('/users', validate(schema), (req: Reques, res: Response, next: NextFunc
 
 ### Validating queries
 
-By default, the validator will match the schema agains the body of the request, this is why the root type is `{ type: 'object' }`. It is also possible to validate the query string params:
+By default, the validator will match the schema against the body of the request, this is why the root type is `{ type: 'object' }`. It is also possible to validate the query string params:
 
 ```ts
 import { validate } from '@expresso/validator'
