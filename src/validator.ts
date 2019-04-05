@@ -6,7 +6,7 @@ import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
 const REASON_REQUIRED = 'required'
 const REASON_REQUIRED_MESSAGE = 'is required'
 
-type ValidateOptions = { coerce: boolean, defaults: boolean, property: string }
+type ValidateOptions = { coerce?: boolean, defaults?: boolean, property?: string }
 
 type ReadableError = {
   path: string
@@ -34,7 +34,14 @@ function humanReadableErrors (errors: Nullable<ErrorObject[]>): Nullable<Readabl
   })
 }
 
-function factory (schema: JSONSchema, { coerce = true, defaults = true, property = 'body' }: ValidateOptions): RequestHandler {
+const defaultOptions: ValidateOptions = {
+  coerce: true,
+  defaults: true,
+  property: 'body'
+}
+
+function factory (schema: JSONSchema, options?: ValidateOptions): RequestHandler {
+  const { coerce, defaults, property } = { ...defaultOptions, ...options }
   const ajv = new Ajv({
     coerceTypes: coerce,
     useDefaults: defaults,
@@ -45,7 +52,7 @@ function factory (schema: JSONSchema, { coerce = true, defaults = true, property
 
   return (req: ExtendedRequest, _res: Response, next: NextFunction) => {
     const validateBody = (validate: ValidateFunction) => {
-      if (validate(req[property] || {})) return next()
+      if (validate(req[property as string] || {})) return next()
 
       const errors = humanReadableErrors(validate.errors)
       const message = (errors as ReadableError[]).map(error => error.message).join('.')
