@@ -66,7 +66,7 @@ function factory (schema: JSONSchema, options?: ValidateOptions): RequestHandler
   }
 }
 
-factory.body = (schema: JSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'body' })
-factory.query = (schema: JSONSchema, options: ValidateOptions) => factory(schema, { ...options, property: 'query' })
+factory.body = (schema: JSONSchema, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'body' })
+factory.query = (schema: JSONSchema, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'query' })
 
 export { factory as validate }
