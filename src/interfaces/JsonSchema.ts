@@ -9,7 +9,7 @@ type StringBuiltInFormats = 'date-time' | 'time' | 'date' | 'email' | 'idn-email
  * @description Base for all other types
  */
 interface PrimitiveType<U> {
-  type: U
+  type?: U
 }
 
 /**
@@ -55,7 +55,7 @@ interface ObjectPropertyPart {
 interface ObjectSchema extends GenericType, PrimitiveType<'object'> {
   required?: string[]
   additionalProperties?: boolean | JSONSchema
-  properties?: ObjectPropertyPart | CombinationOperators<ObjectSchema>
+  properties?: ObjectPropertyPart
   propertyNames?: {
     pattern: string
   }
