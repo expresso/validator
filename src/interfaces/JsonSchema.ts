@@ -22,7 +22,7 @@ interface RootSchema {
 /**
  * @description Properties which are in all types
  */
-interface GenericType<U> extends CombinationOperators<U> {
+interface GenericType extends CombinationOperators<JSONSchema> {
   title?: string
   description?: string
   default?: any
@@ -52,10 +52,10 @@ interface ObjectPropertyPart {
 /**
  * @description Object type
  */
-interface ObjectSchema extends GenericType<ObjectSchema>, PrimitiveType<'object'> {
+interface ObjectSchema extends GenericType, PrimitiveType<'object'> {
   required?: string[]
   additionalProperties?: boolean | JSONSchema
-  properties?: ObjectPropertyPart
+  properties?: ObjectPropertyPart | CombinationOperators<ObjectSchema>
   propertyNames?: {
     pattern: string
   }
@@ -72,7 +72,7 @@ interface ObjectSchema extends GenericType<ObjectSchema>, PrimitiveType<'object'
 /**
  * @description Number schemas for integer and number
  */
-interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>>, PrimitiveType<U> {
+interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
   multipleOf?: number
   exclusiveMaximum?: number
   exclusiveMinimum?: number
@@ -83,7 +83,7 @@ interface BaseNumberSchema<U> extends GenericType<BaseNumberSchema<U>>, Primitiv
 /**
  * @description String type
  */
-interface StringSchema extends GenericType<StringSchema>, PrimitiveType<'string'> {
+interface StringSchema extends GenericType, PrimitiveType<'string'> {
   minLength?: number
   maxLength?: number
   pattern?: string
@@ -94,7 +94,7 @@ interface StringSchema extends GenericType<StringSchema>, PrimitiveType<'string'
 /**
  * @description ArraySchema
  */
-interface ArraySchema extends GenericType<ArraySchema>, PrimitiveType<'array'> {
+interface ArraySchema extends GenericType, PrimitiveType<'array'> {
   items?: JSONSchema | JSONSchema[]
   contains?: JSONSchema
   additionalItems?: boolean | JSONSchema
