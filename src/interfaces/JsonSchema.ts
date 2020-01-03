@@ -17,6 +17,8 @@ interface PrimitiveType<U> {
  */
 interface RootSchema {
   $schema?: string
+  $ref?: string
+  definitions?: string
 }
 
 /**
@@ -77,7 +79,8 @@ interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
   exclusiveMaximum?: number
   exclusiveMinimum?: number
   minimum?: number
-  maximum?: number
+  maximum?: number,
+  enum?: number[]
 }
 
 /**
