@@ -32,6 +32,7 @@ interface GenericType extends CombinationOperators<JSONSchema> {
   const?: any
   contentEncoding?: string
   contentMediaType?: string
+  enum?: (number | string | Object | Array<any> | boolean | null)[]
 }
 
 /**
@@ -79,8 +80,7 @@ interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
   exclusiveMaximum?: number
   exclusiveMinimum?: number
   minimum?: number
-  maximum?: number,
-  enum?: number[]
+  maximum?: number
 }
 
 /**
