@@ -8,14 +8,14 @@ type StringBuiltInFormats = 'date-time' | 'time' | 'date' | 'email' | 'idn-email
 /**
  * @description Base for all other types
  */
-interface PrimitiveType<U> {
+export interface PrimitiveType<U> {
   type?: U
 }
 
 /**
  * @description Properties that should be at the root level of the schema
  */
-interface RootSchema {
+export interface RootSchema {
   $schema?: string
   $ref?: string
   definitions?: string
@@ -24,7 +24,7 @@ interface RootSchema {
 /**
  * @description Properties which are in all types
  */
-interface GenericType extends CombinationOperators<JSONSchema> {
+export interface GenericType extends CombinationOperators<JSONSchema> {
   title?: string
   description?: string
   default?: any
@@ -38,7 +38,7 @@ interface GenericType extends CombinationOperators<JSONSchema> {
 /**
  * @description Schema combination operators
  */
-interface CombinationOperators<T> {
+export interface CombinationOperators<T> {
   oneOf?: Array<Partial<T>>
   not?: Partial<T>
   anyOf?: Array<Partial<T>>
@@ -48,14 +48,14 @@ interface CombinationOperators<T> {
 /**
  * @description Properties for an object type
  */
-interface ObjectPropertyPart {
+export interface ObjectPropertyPart {
   [propertyName: string]: JSONSchema
 }
 
 /**
  * @description Object type
  */
-interface ObjectSchema extends GenericType, PrimitiveType<'object'> {
+export interface ObjectSchema extends GenericType, PrimitiveType<'object'> {
   required?: string[]
   additionalProperties?: boolean | JSONSchema
   properties?: ObjectPropertyPart
@@ -75,7 +75,7 @@ interface ObjectSchema extends GenericType, PrimitiveType<'object'> {
 /**
  * @description Number schemas for integer and number
  */
-interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
+export interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
   multipleOf?: number
   exclusiveMaximum?: number
   exclusiveMinimum?: number
@@ -86,7 +86,7 @@ interface BaseNumberSchema<U> extends GenericType, PrimitiveType<U> {
 /**
  * @description String type
  */
-interface StringSchema extends GenericType, PrimitiveType<'string'> {
+export interface StringSchema extends GenericType, PrimitiveType<'string'> {
   minLength?: number
   maxLength?: number
   pattern?: string
@@ -97,7 +97,7 @@ interface StringSchema extends GenericType, PrimitiveType<'string'> {
 /**
  * @description ArraySchema
  */
-interface ArraySchema extends GenericType, PrimitiveType<'array'> {
+export interface ArraySchema extends GenericType, PrimitiveType<'array'> {
   items?: JSONSchema | JSONSchema[]
   contains?: JSONSchema
   additionalItems?: boolean | JSONSchema
