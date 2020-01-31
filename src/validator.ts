@@ -1,4 +1,5 @@
 import { badData } from 'boom'
+import { Definition } from 'typescript-json-schema'
 import { JSONSchema } from './interfaces/JsonSchema'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
@@ -40,7 +41,7 @@ const defaultOptions: ValidateOptions = {
   property: 'body'
 }
 
-function factory (schema: JSONSchema, options?: ValidateOptions): RequestHandler {
+function factory (schema: JSONSchema | Definition, options?: ValidateOptions): RequestHandler {
   const { coerce, defaults, property } = { ...defaultOptions, ...options }
   const ajv = new Ajv({
     coerceTypes: coerce,
@@ -66,7 +67,7 @@ function factory (schema: JSONSchema, options?: ValidateOptions): RequestHandler
   }
 }
 
-factory.body = (schema: JSONSchema, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'body' })
-factory.query = (schema: JSONSchema, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'query' })
+factory.body = (schema: JSONSchema | Definition, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'body' })
+factory.query = (schema: JSONSchema | Definition, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'query' })
 
 export { factory as validate }
