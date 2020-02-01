@@ -1,5 +1,5 @@
 import { badData } from 'boom'
-import { Definition } from 'typescript-json-schema'
+import { Definition, PartialArgs } from 'typescript-json-schema'
 import { JSONSchema } from './interfaces/JsonSchema'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import Ajv, { ErrorObject, DependenciesParams, ValidateFunction } from 'ajv'
@@ -65,6 +65,10 @@ function factory (schema: JSONSchema | Definition, options?: ValidateOptions): R
       .then(validateBody)
       .catch(next)
   }
+}
+
+export function validateType <_T> (_schema?: PartialArgs, _validator?: ValidateOptions): RequestHandler {
+  throw new Error('this shouldnt be on runtime')
 }
 
 factory.body = (schema: JSONSchema | Definition, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'body' })
