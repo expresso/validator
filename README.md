@@ -9,6 +9,7 @@
   - [What is this](#what-is-this)
   - [Basic Usage](#basic-usage)
     - [Validating queries](#validating-queries)
+    - [validateType function](#validatetype-function)
   - [Errors](#errors)
 
 ## What is this
@@ -73,6 +74,10 @@ app.get('/users', validate.query(schema), (req: Reques, res: Response, next: Nex
 ```
 
 This will validate the whole query string against the given schema.
+
+### validateType function
+`validateType` is actually a dummy function that should be removed in runtime. It exists to give type
+safety for using [@expresso/ts-transformer-json-schema](https://npmjs.org/packages/@expresso/ts-transformer-json-schema)
 
 ## Errors
 
