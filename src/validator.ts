@@ -68,7 +68,7 @@ function factory (schema: JSONSchema | Definition, options?: ValidateOptions): R
 }
 
 export function validateType <_T> (_schema?: PartialArgs, _validator?: ValidateOptions): RequestHandler {
-  throw new Error('this shouldnt be on runtime')
+  return factory(_schema as any, _validator)
 }
 
 factory.body = (schema: JSONSchema | Definition, options: ValidateOptions = {}) => factory(schema, { ...options, property: 'body' })
