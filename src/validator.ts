@@ -1,4 +1,4 @@
-import { badData } from 'boom'
+import { badData } from '@hapi/boom'
 import { Definition, PartialArgs } from 'typescript-json-schema'
 import { JSONSchema } from './interfaces/JsonSchema'
 import { RequestHandler, Request, Response, NextFunction } from 'express'
