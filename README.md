@@ -77,7 +77,7 @@ This will validate the whole query string against the given schema.
 
 ### validateType function
 `validateType` is actually a dummy function that should be removed in runtime. It exists to give type
-safety for using [@expresso/ts-json-schema-transformer](https://www.npmjs.com/package/@nrfcloud/ts-json-schema-transformer)
+safety for using [@expresso/ts-transformer-type-validator](https://www.npmjs.com/package/@expresso/ts-transformer-type-validator)
 
 ## Errors
 
